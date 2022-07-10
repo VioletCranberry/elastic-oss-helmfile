@@ -1,0 +1,80 @@
+# shared values
+
+elastic_image:
+  image: &common_image docker.elastic.co/elasticsearch/elasticsearch-oss
+  image_tag: &common_image_tag 7.10.2
+
+elastic_cluster:
+  name: &common_cluster_name my-elasticsearch
+  role: &common_role_template
+    master: "false"
+    data: "false"
+    ingest: "false"
+    remote_cluster_client: "false"
+  node:
+    size: &common_size_template
+      accessModes:
+        - "ReadWriteOnce"
+      storageClassName: "my-storage-class"
+      resources:
+        requests:
+          storage: ""
+    resources: &common_node_resources
+      requests:
+        cpu: "1000m"
+        memory: "2Gi"
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+
+# per-release values
+
+elasticsearch-master:
+  nodeGroup: "master"
+  clusterName: *common_cluster_name
+  replicas: 3
+  imageTag: *common_image_tag
+  image: *common_image
+  roles:
+    <<: *common_role_template
+    master: "true"
+  resources:
+    <<: *common_node_resources
+  volumeClaimTemplate:
+    <<: *common_size_template
+    resources:
+        requests:
+          storage: "10Gi"
+
+elasticsearch-data:
+  nodeGroup: "data"
+  clusterName: *common_cluster_name
+  replicas: 3
+  imageTag: *common_image_tag
+  image: *common_image
+  roles:
+    <<: *common_role_template
+    data: "true"
+  resources:
+    <<: *common_node_resources
+  volumeClaimTemplate:
+    <<: *common_size_template
+    resources:
+        requests:
+          storage: "30Gi"
+
+elasticsearch-client:
+  nodeGroup: "client"
+  clusterName: *common_cluster_name
+  replicas: 2
+  imageTag: *common_image_tag
+  image: *common_image
+  roles:
+    <<: *common_role_template
+  resources:
+    <<: *common_node_resources
+  volumeClaimTemplate:
+    <<: *common_size_template
+    resources:
+        requests:
+          storage: "10Gi"

@@ -1,0 +1,28 @@
+{{ readFile "./elasticsearch-helmfile/templates/release.yaml" }}
+
+environments:
+  default:
+    missingFileHandler: Error
+    values:
+      - ./elasticsearch-helmfile/values/common.yaml
+
+helmDefaults:
+  wait: true
+
+repositories:
+- name: elastic
+  url: https://helm.elastic.co
+
+releases:
+
+  # elastic master nodegroup
+  - <<: *release
+    name: elasticsearch-master
+
+  # elastic data nodegroup
+  - <<: *release
+    name: elasticsearch-data
+
+  # elastic client nodegroup
+  - <<: *release
+    name: elasticsearch-client

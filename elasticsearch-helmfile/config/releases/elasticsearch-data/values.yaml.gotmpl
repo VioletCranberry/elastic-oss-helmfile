@@ -1,0 +1,3 @@
+{{ pluck "elasticsearch-data" .Environment.Values  | first | toYaml }}
+
+masterService: {{ .Environment.Values.elastic_cluster.name }}-{{ index .Values "elasticsearch-master" "nodeGroup" }}

@@ -1,0 +1,12 @@
+templates:
+
+  release: &release
+    missingFileHandler: Error
+    name: ""
+    namespace: gitlab-elastic
+    createNamespace: true
+    chart: elastic/elasticsearch
+    version: 7.10.2
+    values:
+      - ./elasticsearch-helmfile/config/releases/{{ .Release.Name }}/values.yaml.gotmpl
+    needs: []
